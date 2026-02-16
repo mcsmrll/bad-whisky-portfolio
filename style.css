@@ -1,0 +1,389 @@
+/* =========================================
+   1. VARIABLES Y RESET
+   ========================================= */
+:root {
+    --negro: #000000;
+    --blanco: #ffffff;
+    --gris-suave: #f4f4f4;
+    --gris-texto: #abb8c3;
+    --fuente-principal: 'Open Sans', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    line-height: 1.6;
+    color: var(--negro);
+    background-color: var(--blanco);
+    overflow-x: hidden; /* Evita scroll horizontal accidental */
+}
+
+.container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* =========================================
+   2. HEADER (ENCABEZADO)
+   ========================================= */
+.main-header {
+    background: var(--blanco);
+    padding: 25px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* Quitamos el borde para que sea más limpio como el original */
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilos del Logo */
+.logo h1 {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    margin: 0;
+    position: relative;
+    z-index: 2001; /* Asegura que el logo se vea encima del menú blanco si quieres */
+}
+
+.logo span {
+    font-weight: 300;
+}
+
+/* =========================================
+   3. BOTÓN HAMBURGUESA (ANIMACIÓN CRUZ)
+   ========================================= */
+.menu-toggle {
+    display: flex; /* Siempre visible */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 35px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 2002; /* El nivel más alto para poder cerrar siempre */
+    padding: 0;
+}
+
+.menu-toggle .bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--negro);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Rebote suave */
+    transform-origin: center;
+}
+
+/* Estado Activo: Transformación a X */
+.menu-toggle.is-active .bar:nth-child(1) {
+    transform: translateY(10.5px) rotate(45deg);
+}
+
+.menu-toggle.is-active .bar:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px); /* Efecto de viento hacia la izquierda */
+}
+
+.menu-toggle.is-active .bar:nth-child(3) {
+    transform: translateY(-10.5px) rotate(-45deg);
+}
+
+/* =========================================
+   4. MENÚ PANTALLA COMPLETA (CORTINA)
+   ========================================= */
+/* --- Menú Desplegable (Estilo Vertical y Grande) --- */
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #ffffff; /* Fondo blanco */
+    
+    /* Flexbox para centrar y poner en vertical */
+    display: flex;
+    flex-direction: column; /* Esto los pone uno debajo del otro */
+    align-items: center;    /* Centrados horizontalmente */
+    justify-content: center; /* Centrados verticalmente */
+    
+    /* Configuración de visibilidad (para la animación) */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s;
+    z-index: 1500; /* Debajo del botón hamburguesa */
+}
+
+/* Cuando el menú está activo (se añade esta clase con JS) */
+.nav-menu.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Estilos de los Enlaces (Links) --- */
+.nav-menu a {
+    text-decoration: none; /* Quita el subrayado */
+    color: #000000;        /* Color negro en lugar del azul por defecto */
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;      /* Negrita (Bold) */
+    font-size: 3rem;       /* Tamaño grande (aprox 48px) */
+    text-transform: uppercase; /* Opcional: Todo en mayúsculas */
+    letter-spacing: 2px;   /* Espacio entre letras para elegancia */
+    margin: 20px 0;        /* Separación vertical entre cada enlace */
+    transition: color 0.3s ease; /* Transición suave de color */
+}
+
+/* --- Efecto Hover (Al pasar el ratón) --- */
+.nav-menu a:hover {
+    /* Tono crema oscuro / Beige dorado */
+    color: #c5a065; 
+}
+
+/* Cuando se activa con JS */
+.nav-menu.active {
+    top: 0;
+    visibility: visible;
+}
+
+.nav-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    text-align: center;
+    width: 100%;
+}
+
+.nav-list li {
+    margin: 15px 0;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s ease;
+}
+
+/* Animación en cascada de los elementos */
+.nav-menu.active .nav-list li:nth-child(1) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+.nav-menu.active .nav-list li:nth-child(2) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+.nav-menu.active .nav-list li:nth-child(3) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+
+.nav-list li a {
+    text-decoration: none;
+    color: var(--negro);
+    font-size: 10rem; /* Letra GIGANTE */
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    transition: color 0.3s;
+}
+
+/* En móviles, reducimos un poco la letra para que quepa */
+@media (max-width: 480px) {
+    .nav-list li a { font-size: 2rem; }
+}
+
+.nav-list li a:hover {
+    color: var(--gris-texto);
+    font-weight: 400;
+}
+
+/* =========================================
+   5. CONTENIDO PRINCIPAL (HERO Y GRID)
+   ========================================= */
+.hero {
+    padding: 120px 0 80px;
+    text-align: center;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    color: var(--gris-texto);
+    font-size: 1.1rem;
+}
+
+/* =========================================
+   REJILLA DE PORTAFOLIO (EFECTO DOBLE IMAGEN)
+   ========================================= */
+.portfolio-grid {
+    display: grid;
+    /* Para 2 proyectos grandes, usamos 2 columnas si caben, o 1 en móvil */
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    padding-bottom: 80px;
+}
+
+.portfolio-item {
+    position: relative;
+    overflow: hidden; /* Esconde el zoom si se sale del marco */
+    cursor: pointer;
+    /* Un aspecto ratio cuadrado o rectangular ayuda a mantener la forma */
+    aspect-ratio: 4 / 3; 
+}
+
+/* Estilos comunes para ambas imágenes */
+.portfolio-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que la imagen cubra todo el espacio sin deformarse */
+    display: block;
+    transition: all 0.6s ease; /* Transición suave para zoom y opacidad */
+}
+
+/* --- Imagen Frontal (Visible por defecto) --- */
+.img-front {
+    position: relative; /* Ocupa su espacio natural */
+    z-index: 1;
+}
+
+/* --- Imagen Trasera (Oculta por defecto) --- */
+.img-back {
+    position: absolute; /* Se coloca exactamente encima de la frontal */
+    top: 0;
+    left: 0;
+    opacity: 0; /* Totalmente transparente al inicio */
+    z-index: 2; /* Está por encima de la frontal */
+}
+
+/* --- EFECTOS HOVER --- */
+
+/* 1. Mostrar la segunda imagen al pasar el mouse */
+.portfolio-item:hover .img-back {
+    opacity: 1;
+}
+
+/* 2. Zoom suave en AMBAS imágenes al pasar el mouse */
+.portfolio-item:hover img {
+    transform: scale(1.05);
+}
+
+/* --- Overlay (Capa de texto y color crema) --- */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* Usamos el color de fondo crema de tu paleta, casi opaco */
+    background: rgba(249, 247, 242, 0.6); 
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* Oculto inicialmente */
+    transition: opacity 0.4s ease;
+    z-index: 3; /* IMPORTANTE: Por encima de las dos imágenes */
+}
+
+/* Mostrar el overlay al pasar el mouse */
+.portfolio-item:hover .overlay {
+    opacity: 1;
+}
+
+/* Texto del overlay */
+.overlay .text {
+    color: var(--texto-principal); /* Color carbón */
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    transform: translateY(20px); /* Empieza un poco más abajo */
+    transition: transform 0.4s ease 0.1s; /* Retraso para que el texto suba después de que aparezca el overlay */
+}
+
+/* El texto sube a su posición */
+.portfolio-item:hover .overlay .text {
+    transform: translateY(0);
+}
+/* =========================================
+   FOOTER
+   ========================================= */
+.main-footer {
+    background-color: #ffffff;
+    padding: 80px 50px; 
+    border-top: 1px solid rgba(0,0,0,0.05);
+    margin-top: 50px;
+}
+
+.footer-inner {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Distribuye a los extremos */
+    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.75rem; /* Letra pequeña y discreta (aprox 12px) */
+    letter-spacing: 1.5px; /* Mucho espaciado entre letras */
+    text-transform: uppercase;
+    font-weight: 600; /* Un poco de peso para que se lea bien */
+    color: #999999;   /* Gris suave base */
+}
+
+/* Configuración de las 3 columnas para que estén equilibradas */
+.footer-col {
+    flex: 1;
+    display: flex;
+}
+
+/* Alineaciones específicas */
+.footer-col.copyright { justify-content: flex-start; } /* Izquierda */
+.footer-col.social    { justify-content: center; }     /* Centro */
+.footer-col.privacy   { justify-content: flex-end; }   /* Derecha */
+
+/* --- Estilos para el enlace de Privacy Policy --- */
+.footer-col.privacy a {
+    text-decoration: none;
+    color: #999999; /* Mismo gris que el texto normal */
+    transition: color 0.3s ease;
+}
+
+.footer-col.privacy a:hover {
+    color: #000000; /* Se oscurece al pasar el ratón */
+}
+
+/* --- Estilos para Instagram (Icono) --- */
+.footer-col.social a {
+    color: #000000; /* Icono negro por defecto */
+    transition: all 0.3s ease;
+    padding: 10px;
+    display: block;
+}
+
+.footer-col.social svg {
+    width: 22px; /* Tamaño discreto */
+    height: 22px;
+}
+
+.footer-col.social a:hover {
+    color: #c5a065;     /* Color crema */
+    transform: scale(1.1);
+}
+
+/* --- Adaptación Móvil --- */
+@media (max-width: 768px) {
+    .main-footer { padding: 40px 20px; }
+    
+    .footer-inner {
+        flex-direction: column; /* Apilados */
+        gap: 25px;
+    }
+
+    /* Orden específico para móvil: 1. Instagram, 2. Privacy, 3. Copyright */
+    .footer-col.social    { order: 1; }
+    .footer-col.privacy   { order: 2; }
+    .footer-col.copyright { order: 3; }
+}
